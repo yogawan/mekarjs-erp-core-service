@@ -1,3 +1,4 @@
+// @/models/Inventory.ts
 import mongoose, { Document, Model } from "mongoose";
 
 export interface IInventory extends Document {
