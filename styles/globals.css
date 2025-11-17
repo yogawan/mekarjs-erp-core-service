@@ -20,3 +20,13 @@ body {
     background: var(--background);
     color: var(--foreground);
 }
+
+/* Hide scrollbar globally */
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}

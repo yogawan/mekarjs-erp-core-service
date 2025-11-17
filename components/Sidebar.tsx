@@ -158,7 +158,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
           <X className="w-5 h-5" />
         </button>
       </div>
-      <nav className="p-3 space-y-1 flex-1 overflow-y-auto">
+      <nav className="p-3 space-y-1 flex-1 overflow-y-auto scrollbar-hide">
         {sidebarMenu.map((menu) => renderMenu(menu))}
       </nav>
     </>
@@ -197,18 +197,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       </aside>
 
       <style jsx>{`
-        nav::-webkit-scrollbar {
-          width: 4px;
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
-        nav::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        nav::-webkit-scrollbar-thumb {
-          background: #cbd5e1;
-          border-radius: 2px;
-        }
-        nav::-webkit-scrollbar-thumb:hover {
-          background: #94a3b8;
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </>
