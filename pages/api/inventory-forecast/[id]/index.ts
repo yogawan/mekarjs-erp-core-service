@@ -1,6 +1,6 @@
-// @/pages/api/product/[id]/index.ts
+// @/pages/api/inventory-forecast/[id]/index.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import Product from "@/models/Product";
+import InventoryForecast from "@/models/InventoryForecast";
 import { mongoConnect } from "@/lib/mongoConnect";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -10,41 +10,53 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case "GET":
       try {
-        const product = await Product.findById(id);
-        if (!product)
+        const data = await InventoryForecast.findById(id)
+          .populate("produkId")
+          .populate("gudangId");
+
+        if (!data)
           return res
             .status(404)
-            .json({ success: false, message: "Product not found" });
-        return res.status(200).json({ success: true, data: product });
+            .json({ success: false, message: "Forecast not found" });
+
+        return res.status(200).json({ success: true, data });
       } catch (err: any) {
         return res.status(400).json({ success: false, message: err.message });
       }
 
     case "PUT":
       try {
-        const product = await Product.findByIdAndUpdate(id, req.body, {
-          new: true,
-          runValidators: true,
-        });
-        if (!product)
+        const updated = await InventoryForecast.findByIdAndUpdate(
+          id,
+          req.body,
+          {
+            new: true,
+            runValidators: true,
+          },
+        );
+
+        if (!updated)
           return res
             .status(404)
-            .json({ success: false, message: "Product not found" });
-        return res.status(200).json({ success: true, data: product });
+            .json({ success: false, message: "Forecast not found" });
+
+        return res.status(200).json({ success: true, data: updated });
       } catch (err: any) {
         return res.status(400).json({ success: false, message: err.message });
       }
 
     case "DELETE":
       try {
-        const deleted = await Product.findByIdAndDelete(id);
+        const deleted = await InventoryForecast.findByIdAndDelete(id);
+
         if (!deleted)
           return res
             .status(404)
-            .json({ success: false, message: "Product not found" });
+            .json({ success: false, message: "Forecast not found" });
+
         return res
           .status(200)
-          .json({ success: true, message: "Product deleted successfully" });
+          .json({ success: true, message: "Forecast deleted successfully" });
       } catch (err: any) {
         return res.status(400).json({ success: false, message: err.message });
       }

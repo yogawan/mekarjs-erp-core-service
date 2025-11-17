@@ -1,3 +1,4 @@
+// @/models/InventoryMovement.ts
 import mongoose, { Document, Model } from "mongoose";
 
 export interface IInventoryMovement extends Document {
@@ -22,8 +23,11 @@ const PergerakanInventoriSchema = new mongoose.Schema<IInventoryMovement>(
     gudangId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Warehouse",
-      required: true,
+      required: function () {
+        return this.tipe !== "TRANSFER";
+      },
     },
+
     tipe: {
       type: String,
       enum: ["MASUK", "KELUAR", "TRANSFER"],

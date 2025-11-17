@@ -1,8 +1,6 @@
-// @/pages/api/inventory/[id]/index.ts
+// @/pages/api/inventory-movement/[id]/index.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import Product from "@/models/Product";
-import Warehouse from "@/models/Warehouse";
-import Inventory from "@/models/Inventory";
+import InventoryMovement from "@/models/InventoryMovement";
 import { mongoConnect } from "@/lib/mongoConnect";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -12,23 +10,37 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case "GET":
       try {
-        const inventory = await Inventory.findById(id)
+        const data = await InventoryMovement.findById(id)
           .populate("produkId")
-          .populate("gudangId");
+          .populate("gudangId")
+          .populate("gudangAsalId")
+          .populate("gudangTujuanId");
 
-        if (!inventory)
+        if (!data)
           return res
             .status(404)
-            .json({ success: false, message: "Inventory not found" });
+            .json({ success: false, message: "Movement not found" });
 
-        return res.status(200).json({ success: true, data: inventory });
+        return res.status(200).json({ success: true, data });
       } catch (err: any) {
         return res.status(400).json({ success: false, message: err.message });
       }
 
     case "PUT":
       try {
-        const updated = await Inventory.findByIdAndUpdate(id, req.body, {
+        const body = req.body;
+
+        if (
+          body.tipe === "TRANSFER" &&
+          (!body.gudangAsalId || !body.gudangTujuanId)
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "TRANSFER membutuhkan gudangAsalId & gudangTujuanId",
+          });
+        }
+
+        const updated = await InventoryMovement.findByIdAndUpdate(id, body, {
           new: true,
           runValidators: true,
         });
@@ -36,7 +48,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         if (!updated)
           return res
             .status(404)
-            .json({ success: false, message: "Inventory not found" });
+            .json({ success: false, message: "Movement not found" });
 
         return res.status(200).json({ success: true, data: updated });
       } catch (err: any) {
@@ -45,16 +57,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     case "DELETE":
       try {
-        const deleted = await Inventory.findByIdAndDelete(id);
+        const deleted = await InventoryMovement.findByIdAndDelete(id);
 
         if (!deleted)
           return res
             .status(404)
-            .json({ success: false, message: "Inventory not found" });
+            .json({ success: false, message: "Movement not found" });
 
         return res.status(200).json({
           success: true,
-          message: "Inventory deleted successfully",
+          message: "Movement deleted successfully",
         });
       } catch (err: any) {
         return res.status(400).json({ success: false, message: err.message });
