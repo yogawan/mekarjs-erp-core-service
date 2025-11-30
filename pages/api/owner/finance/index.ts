@@ -9,13 +9,10 @@ type Data = {
   timestamp: string;
 };
 
-async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   // Dummy data pemasukan & pengeluaran (bisa lu ganti dari DB)
-  const pemasukan = 1500000;   // contoh pemasukan
-  const pengeluaran = 500000;  // contoh pengeluaran
+  const pemasukan = 927341178780; // contoh pemasukan
+  const pengeluaran = 127341178780; // contoh pengeluaran
 
   const netProfit = pemasukan - pengeluaran;
 
