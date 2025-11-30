@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import BranchManager from "@/models/BranchManager";
 import Branch from "@/models/Branch";
 import { mongoConnect } from "@/lib/mongoConnect";
+import { enableCors } from "@/middleware/enableCors";
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
@@ -25,3 +26,5 @@ export default async function handler(
 
   return res.status(405).json({ message: "Method Not Allowed" });
 }
+
+export default enableCors(handler);

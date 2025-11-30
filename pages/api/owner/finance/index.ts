@@ -1,5 +1,6 @@
 // @/pages/api/index.ts
 import type { NextApiRequest, NextApiResponse } from "next";
+import { enableCors } from "@/middleware/enableCors";
 
 type Data = {
   pemasukan: string;
@@ -8,7 +9,7 @@ type Data = {
   timestamp: string;
 };
 
-export default function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
@@ -25,3 +26,5 @@ export default function handler(
     timestamp: new Date().toISOString(),
   });
 }
+
+export default enableCors(handler);

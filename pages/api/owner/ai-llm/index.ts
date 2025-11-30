@@ -3,10 +3,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import Groq from "groq-sdk";
 import { mongoConnect } from "@/lib/mongoConnect";
+import { enableCors } from "@/middleware/enableCors";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
@@ -60,3 +61,5 @@ export default async function handler(
     return res.status(500).json({ message: "Server error" });
   }
 }
+
+export default enableCors(handler);

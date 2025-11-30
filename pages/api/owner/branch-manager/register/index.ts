@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import BranchManager from "@/models/BranchManager";
 import { mongoConnect } from "@/lib/mongoConnect";
 import { hashPassword } from "@/lib/auth";
+import { enableCors } from "@/middleware/enableCors";
 
 async function handler(
   req: NextApiRequest,
@@ -44,4 +45,4 @@ async function handler(
   }
 }
 
-export default handler;
+export default enableCors(handler);
