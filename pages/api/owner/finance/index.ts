@@ -12,7 +12,7 @@ type Data = {
 async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   // Dummy data pemasukan & pengeluaran (bisa lu ganti dari DB)
   const pemasukan = 927341178780; // contoh pemasukan
-  const pengeluaran = 127341178780; // contoh pengeluaran
+  const pengeluaran = 144012400000; // contoh pengeluaran
 
   const netProfit = pemasukan - pengeluaran;
 
