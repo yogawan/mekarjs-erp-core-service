@@ -9,6 +9,9 @@ async function handler(
   res: NextApiResponse,
 ) {
   await mongoConnect();
+  
+  // Ensure Branch model is registered
+  Branch;
 
   if (req.method === "GET") {
     try {
