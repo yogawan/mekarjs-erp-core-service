@@ -48,9 +48,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
+    const orderId = notification.order_id;
+
+    // Handle test notification from Midtrans
+    if (orderId.startsWith("payment_notif_test_")) {
+      console.log("Test notification from Midtrans:", orderId);
+      return res.status(200).json({
+        success: true,
+        message: "Test notification received",
+      });
+    }
+
     // Verifikasi signature hash dari Midtrans
     const serverKey = process.env.MIDTRANS_SERVER_KEY as string;
-    const orderId = notification.order_id;
     const statusCode = notification.status_code;
     const grossAmount = notification.gross_amount;
 
@@ -79,7 +89,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const transaction = await Transaction.findOne({ orderId });
     if (!transaction) {
       console.error(`Transaction not found for order_id: ${orderId}`);
-      return res.status(404).json({
+      // Return 200 agar Midtrans tidak retry terus-menerus
+      return res.status(200).json({
         success: false,
         message: "Transaction not found",
       });
