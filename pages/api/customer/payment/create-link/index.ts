@@ -115,8 +115,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           });
         }
 
-        // Update transaksi dengan payment URL
+        console.log("Midtrans response:", {
+          originalOrderId: orderId,
+          midtransOrderId: midtransData.order_id,
+          paymentUrl: midtransData.payment_url,
+        });
+
+        // Update transaksi dengan payment URL dan order_id dari Midtrans (jika berbeda)
         transaction.paymentUrl = midtransData.payment_url;
+        
+        // Midtrans mungkin mengubah order_id, update jika berbeda
+        if (midtransData.order_id && midtransData.order_id !== orderId) {
+          console.log(`Order ID changed by Midtrans: ${orderId} -> ${midtransData.order_id}`);
+          transaction.orderId = midtransData.order_id;
+        }
+        
         await transaction.save();
 
         return res.status(201).json({
