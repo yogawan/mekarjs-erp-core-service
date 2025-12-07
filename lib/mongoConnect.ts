@@ -15,6 +15,7 @@ import "@/models/Purchase";
 import "@/models/Sale";
 import "@/models/Supplier";
 import "@/models/Warehouse";
+import "@/models/Transaction";
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
