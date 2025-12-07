@@ -86,7 +86,28 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Cari transaksi berdasarkan order_id
-    const transaction = await Transaction.findOne({ orderId });
+    let transaction = await Transaction.findOne({ orderId });
+    
+    // Jika tidak ditemukan, coba cari dengan prefix match
+    // Karena Midtrans menambahkan timestamp di belakang order_id untuk payment links
+    if (!transaction) {
+      console.log(`Exact match not found, trying prefix match for: ${orderId}`);
+      
+      // Extract base order ID (remove timestamp suffix jika ada)
+      const baseOrderId = orderId.split('-').slice(0, 3).join('-');
+      console.log(`Searching with base order ID: ${baseOrderId}`);
+      
+      transaction = await Transaction.findOne({ 
+        orderId: { $regex: `^${baseOrderId}` } 
+      });
+      
+      if (transaction) {
+        console.log(`Transaction found with prefix match: ${transaction.orderId}`);
+        // Update orderId dengan yang terbaru dari Midtrans
+        transaction.orderId = orderId;
+      }
+    }
+    
     if (!transaction) {
       console.error(`Transaction not found for order_id: ${orderId}`);
       // Return 200 agar Midtrans tidak retry terus-menerus
