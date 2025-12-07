@@ -1,9 +1,10 @@
-// @/pages/api/customer/product/[id]/index.ts
+// @/pages/api/customer/product-showcase/[id]/index.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import "@/models/Branch"
 import Product from "@/models/Product";
 import { mongoConnect } from "@/lib/mongoConnect";
 import { enableCors } from "@/middleware/enableCors";
+import { verifyAuth } from "@/middleware/verifyAuth";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await mongoConnect();
@@ -29,4 +30,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default enableCors(handler);
+export default enableCors(verifyAuth(handler));
