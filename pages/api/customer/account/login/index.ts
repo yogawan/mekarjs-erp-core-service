@@ -3,8 +3,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import Customer from "@/models/Customer";
 import { mongoConnect } from "@/lib/mongoConnect";
 import { comparePassword, generateToken } from "@/lib/auth";
+import { enableCors } from "@/middleware/enableCors";
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
@@ -34,3 +35,5 @@ export default async function handler(
     customer: user,
   });
 }
+
+export default enableCors(handler);

@@ -4,8 +4,9 @@ import { mongoConnect } from "@/lib/mongoConnect";
 import Otp from "@/models/Otp";
 import Customer from "@/models/Customer";
 import { hashPassword } from "@/lib/auth";
+import { enableCors } from "@/middleware/enableCors";
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
@@ -43,3 +44,5 @@ export default async function handler(
     return res.status(500).json({ message: "Server error" });
   }
 }
+
+export default enableCors(handler);

@@ -6,8 +6,9 @@ import { mongoConnect } from "@/lib/mongoConnect";
 import { generateOtp } from "@/lib/generateOtp";
 import { hashPassword } from "@/lib/auth";
 import { sendEmail } from "@/lib/mailer";
+import { enableCors } from "@/middleware/enableCors";
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
@@ -52,3 +53,5 @@ export default async function handler(
     message: "OTP terkirim ke email. Silakan verifikasi.",
   });
 }
+
+export default enableCors(handler);
